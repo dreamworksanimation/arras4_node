@@ -1,0 +1,40 @@
+Import('env')
+# ------------------------------------------
+name       = 'arras4_node'
+sources    = env.DWAGlob('*.cc')
+components = [
+                'message_api',
+		'shared_impl',
+                'execute',
+                'node_session',
+                'jsoncpp',
+                'arras4_http',
+                'arras4_httpserver',
+		'arras4_log',
+		'arras4_athena',
+		'arras4_crash',
+                'boost_program_options_mt',
+		'boost_filesystem_mt',
+		'breakpad'
+    ]
+
+# ------------------------------------------
+#()
+env.DWAUseComponents(components)
+prog = env.DWAProgram(name, sources)
+target = env.DWAInstallBin(prog)
+
+cxxflags = []
+if "gcc" in env['COMPILER_LABEL']:
+   # for breakpad with gcc we still need GNU extension for 'typeof'
+   if '-std=c++14' in env['CXXFLAGS']:
+      cxxflags.append('-std=gnu++14')
+      env.Append(CXXFLAGS = cxxflags)
+   elif '-std=c++17' in env['CXXFLAGS']:
+      cxxflags.append('-std=gnu++17')
+      env.Append(CXXFLAGS = cxxflags)
+   else:
+      cxxflags.append('-std=gnu++11') # defaults to this one
+      env.Append(CXXFLAGS = cxxflags)
+
+env.DWAComponent(name, COMPONENTS=components)

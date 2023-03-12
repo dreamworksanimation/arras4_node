@@ -1,0 +1,35 @@
+Import('env')
+
+##
+## Name of the target jar file.
+##
+## Regardless of what the output jar file of the maven command is named, Scons
+## will install the jar into the lib/java directory with the specified jar name.
+##
+target = "arras_coordinator.jar"
+
+##
+## Source configuration.
+##
+## This is a dict containing parameter values for downloading the service's jar
+## artifact from Nexus. When updating the version, both the version and artifact
+## fields must be updated.
+##
+## Note: Using the Nexus-supported keywords "LATEST" and "RELEASE" for the
+## version string will also return something, but may not always return the
+## expected artifact since the answer will depend on the current statue of the
+## Nexus indexes. Those keywords are only guaranteed to work correctly for
+## Maven plugins.
+##
+sourceConf = { "service": "arras-coordinator",
+               "group": "com.nova.arras.coordinator",
+               "version": "4.0.30",
+               "artifact": "arras-coordinator-4.0.30.war" }
+
+##
+## Run NexusPull() which will return the path to an executable jar, then
+## install the jar into the lib/java directory. Tho, only one jar is ever
+## generated, it is returned as a list for consistency with other Builders.
+##
+executables = env.NexusPull(target, sourceConf)
+env.DWAInstallFiles("lib/java", executables)

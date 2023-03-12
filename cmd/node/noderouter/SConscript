@@ -1,0 +1,51 @@
+Import('env')
+# ------------------------------------------
+name       = 'arras4_router'
+sources    = env.DWAGlob('*.cc')
+components = [
+                'arras4_log',
+                'arras4_crash',
+                'arras4_athena',
+                'message_api',
+                'message_impl',
+                'shared_impl',
+                'routing',
+                'core_messages',
+                'arras4_network',
+                'arras4_http',
+                'arras4_httpserver',
+                'arras4_exceptions',
+                'jsoncpp',
+                'boost_date_time_mt',
+                'boost_log_mt',
+                'boost_headers',
+                'boost_program_options_mt',
+                'boost_filesystem_mt',
+                'breakpad',
+                'node_router',
+		'node_messages'
+    ]
+
+env.AppendUnique(LIBS = ['cgroup', 'dl'])
+
+# ------------------------------------------
+#()
+env.DWAUseComponents(components)
+prog = env.DWAProgram(name, sources)
+target = env.DWAInstallBin(prog)
+
+cxxflags = []
+if "gcc" in env['COMPILER_LABEL']:
+   # for breakpad with gcc we still need GNU extension for 'typeof'
+   if '-std=c++14' in env['CXXFLAGS']:
+      cxxflags.append('-std=gnu++14')
+      env.Append(CXXFLAGS = cxxflags)
+   elif '-std=c++17' in env['CXXFLAGS']:
+      cxxflags.append('-std=gnu++17')
+      env.Append(CXXFLAGS = cxxflags)
+   else:
+      cxxflags.append('-std=gnu++11') # defaults to this one
+      env.Append(CXXFLAGS = cxxflags)
+
+env.DWAComponent(name, COMPONENTS=components)
+

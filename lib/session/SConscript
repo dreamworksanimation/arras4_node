@@ -1,0 +1,39 @@
+Import('env')
+from os import path
+
+# --------------------------------------------------------------------------
+name       = 'node_session'
+sources    = env.DWAGlob('*.cc')
+incdir     = [str(env.Dir('..').srcnode())]
+components = [
+    'arras4_log',
+    'message_api', 
+    'execute',
+    'node_messages',
+    'shared_impl',
+    'core_messages',
+    'arras4_network',
+    'jsoncpp'
+]
+# --------------------------------------------------------------------------
+
+publicHeaders = [
+    'ArrasController.h',
+    'ArrasSessions.h',
+    'Computation.h',    
+    'ComputationConfig.h',
+    'ComputationDefaults.h',
+    'OperationError.h',
+    'Session.h',
+    'SessionConfig.h',
+    'SessionError.h'
+    
+]
+
+env.DWAInstallInclude(publicHeaders, 'session')
+
+env.DWAUseComponents(components)
+lib = env.DWASharedLibrary(name, sources)
+target = env.DWAInstallLib(lib)
+env.DWAComponent(name, LIBS=[target], CPPPATH=incdir, COMPONENTS=components)
+env.DWALinkValidate(name)

@@ -1,0 +1,79 @@
+{
+    "name": "test2",
+    "description": "multiple test computations",
+    "computations": {
+        "(client)": {
+            "messages": {
+                "ta": "*",
+		"taa": "*",
+		"tb": "*",
+		"tbb": "*"
+            }
+        }, 
+        "ta": {
+            "dso": "libarras4_testcomputation.so", 
+            "entry": "yes", 
+            "forward":true,
+            "requirements": {
+                "computationAPI": "4.x",
+		"pseudo-compiler": "iccHoudini165_64",	
+                "rez_packages": "arras4_test-4",
+                "resources": {
+                    "cores": 1.0,
+                    "memoryMB": 16384
+                }
+            },
+            "messages": {
+                "(client)": "*" 
+            }
+        },
+	"tb": {
+            "dso": "libarras4_testcomputation.so", 
+            "forward":true,
+            "requirements": {
+                "computationAPI": "4.x",
+		"pseudo-compiler": "iccHoudini165_64",	
+                "rez_packages": "arras4_test-4",
+                "resources": {
+                    "cores": 1.0,
+                    "memoryMB": 16384
+                }
+            },
+            "messages": {
+                "(client)": "*" 
+            }
+        },
+	"taa": {
+            "dso": "libarras4_testcomputation.so", 
+            "forward":true,
+            "requirements": {
+                "computationAPI": "4.x",
+		"pseudo-compiler": "iccHoudini165_64",	
+                "rez_packages": "arras4_test-4",
+                "resources": {
+                    "cores": 1.0,
+                    "memoryMB": 16384
+                }
+            },
+            "messages": {
+                "ta": "*" 
+            }
+        },
+	"tbb": {
+            "dso": "libarras4_testcomputation.so", 
+            "forward":true,
+            "requirements": {
+                "computationAPI": "4.x",
+		"pseudo-compiler": "iccHoudini165_64",	
+                "rez_packages": "arras4_test-4",
+                "resources": {
+                    "cores": 1.0,
+                    "memoryMB": 16384
+                }
+            },
+            "messages": {
+                "tb": "*" 
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+Import('env')
+from os import path
+# extract library name from current/parent path
+modname = path.basename(path.abspath('..'))
+libname = path.basename(path.abspath('.'))
+# --------------------------------------------------------------------------
+name       = modname+'_'+libname
+sources    = env.DWAGlob('*.cc')
+incdir     = [str(env.Dir('../..').srcnode())]
+components =  [
+               'arras4_athena',
+               'arras4_exceptions',
+               'arras4_log',
+               'arras4_network',
+               'arras4_http',
+               'boost_headers',
+               'boost_filesystem_mt',
+               'core_messages',
+               'jsoncpp',
+               'message_api',
+               'message_impl',
+	       'node_messages',
+               'routing',
+               'shared_impl'
+              ]
+# --------------------------------------------------------------------------
+()
+env.DWAUseComponents(components)
+lib = env.DWASharedLibrary(name, sources)
+target = env.DWAInstallLib(lib)
+env.DWAInstallInclude(['NodeRouterManage.h','NodeRouterOptions.h','pthread_create_interposer.h'], 
+    'node/router')
+env.DWAComponent(name, LIBS=[target], CPPPATH=incdir, COMPONENTS=components)
+env.Append(CPPPATH=incdir)
+env.DWALinkValidate(name)

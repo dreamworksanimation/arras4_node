@@ -1,0 +1,7 @@
+# Copyright 2023 DreamWorks Animation LLC and Intel Corporation
+# SPDX-License-Identifier: Apache-2.0
+
+based on arras_components/develop-4 commit d8b4973611156ef6ccd553dcbf4ad31e6cb76d56
+which was merged from develop commit 8c3f2ff7747723285ce9afc23a04d10698abf7b5 [JOSE-12377 generate rex context from rez packages cyu committed on Feb 1]
+
+merged from arras_components/arras4_node_prep commit f3fb6b3c594d19f6cc2392367a78aca185970506 on Oct 10 2018

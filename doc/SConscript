@@ -1,0 +1,11 @@
+Import('env')
+ 
+env.Tool('dwa_doxygen')
+ 
+#the name of the folio
+folioName = "LIBNAME"
+ 
+# Files and directories to use as input to Doxygen
+inputFiles = ['#cmd']
+ 
+dox = env.DWADoxygenSimple(folioName, inputFiles)

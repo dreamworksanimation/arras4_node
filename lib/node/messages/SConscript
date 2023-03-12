@@ -1,0 +1,24 @@
+Import('env')
+from os import path
+# --------------------------------------------------------------------------
+name       = 'node_messages'
+sources    = env.DWAGlob('*.cc')
+incdir     = [str(env.Dir('../..').srcnode())]
+components =  [
+               'message_api'
+              ]
+# --------------------------------------------------------------------------
+()
+env.DWAUseComponents(components)
+lib = env.DWASharedLibrary(name, sources)
+target = env.DWAInstallLib(lib)
+env.DWAInstallInclude([
+	'ClientConnectionStatusMessage.h',	
+	'ComputationStatusMessage.h',
+	'RouterInfoMessage.h',	
+	'SessionRoutingDataMessage.h',	
+], 
+    'node/messages')
+env.DWAComponent(name, LIBS=[target], CPPPATH=incdir, COMPONENTS=components)
+env.Append(CPPPATH=incdir)
+env.DWALinkValidate(name)

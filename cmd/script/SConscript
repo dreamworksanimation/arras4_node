@@ -1,0 +1,7 @@
+Import('env')
+
+bin_scripts = 'arras4.sh'
+sbin_scripts = 'consul_loader'
+
+env.DWAInstallFiles('bin', bin_scripts)
+env.DWAInstallFiles('sbin', sbin_scripts)

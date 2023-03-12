@@ -1,0 +1,115 @@
+#!/bin/env python
+# Copyright 2023 DreamWorks Animation LLC and Intel Corporation
+# SPDX-License-Identifier: Apache-2.0
+
+import argparse, os, sys, json, shlex
+
+import requests
+
+CONFIG_ENDPOINT_FMT = '{}/serve/jose/arras/endpoints/{}/{}/consul/url'
+CONSUL_KV_ROOT = "v1/kv"
+CONSUL_ENGINE_PATH = "arras/conf/engines"
+CONSUL_SESSION_PATH = "arras/conf/sessions"
+DEFAULT_CONFIG_SERVER_URL = "http://localhost:8500"
+DEFAULT_CONFIG_DIR = "/tmp/arras/session_configs"
+
+def getConsulServerUrl(env):
+    configBase = os.environ['DWA_CONFIG_SERVICE']
+    configUrl = CONFIG_ENDPOINT_FMT.format(configBase, os.environ.get('STUDIO', 'GLD').lower(), env)
+    result = requests.get(configUrl)
+    
+    if result.status_code != requests.codes.ok:
+        result.raise_for_status()     
+    
+    return result.text
+
+def getJsonConfigs(configDir):
+    jsonConfigs = []
+    enginePath = ""
+    for(dirpath, dirnames, filenames) in os.walk(configDir):
+        if dirpath.endswith("engines"):
+            enginePath = CONSUL_ENGINE_PATH
+        if dirpath.endswith("sessions"):
+            enginePath = CONSUL_SESSION_PATH
+        for f in filenames:
+            if f.endswith(".json") and f != "manifest_config.json":
+                tup = ("%s/%s" %(dirpath, f), enginePath)
+                jsonConfigs.append(tup)
+    return jsonConfigs
+
+def uploadToConsul(files, consulServerUrl):
+    for configFile in files:
+        with open(configFile[0]) as f:
+            try:
+                jsonConfig = json.load(f)
+            except ValueError, e:
+                print configFile[0] + " is an invalid JSON file"
+        
+        url = "%s/%s/%s/%s" % (consulServerUrl,
+                                      CONSUL_KV_ROOT,
+                                      configFile[1],
+                                      jsonConfig["name"])
+
+        result = requests.put(url, json=jsonConfig, headers = {'content-type':'application/json'})
+
+EMPTY_ENGINE = { 'name':'empty', 'computations':{} }
+EMPTY_SESSION = { 'name':'empty', 'engine':'empty' }
+
+def uploadEmpty(consulServerUrl):
+    url = "%s/%s/%s/%s" % (consulServerUrl,
+                           CONSUL_KV_ROOT,
+                           CONSUL_ENGINE_PATH,
+                           'empty')
+    r = requests.put(url, json=EMPTY_ENGINE, headers = {'content-type':'application/json'})
+    print "Uploaded empty engine, status code %d"%r.status_code
+    url = "%s/%s/%s/%s" % (consulServerUrl,
+                           CONSUL_KV_ROOT,
+                           CONSUL_SESSION_PATH,
+                           'empty')
+    r = requests.put(url, json=EMPTY_SESSION, headers = {'content-type':'application/json'})
+    print "Uploaded empty session, status code %d"%r.status_code
+    
+    
+def main(args):
+
+    if args.env == 'local':
+        consulServerUrl = DEFAULT_CONFIG_SERVER_URL
+    else:
+        consulServerUrl = getConsulServerUrl(args.env)
+        
+    if args.empty:
+        if args.configDir:
+            print "consul_loader: cannot specify a configDir with the 'empty' option"
+            sys.exit(1)
+        uploadEmpty(consulServerUrl)
+
+    else:
+        if args.configDir is None:
+            configDir = DEFAULT_CONFIG_DIR
+        else:
+            configDir = args.configDir
+            
+        configFiles = getJsonConfigs(configDir)
+        uploadToConsul(configFiles, consulServerUrl)
+
+if __name__ == "__main__":
+    """
+     Define command-line options.
+    """
+    parser = argparse.ArgumentParser(description='Load Consul with Engine & Session Configs')
+
+    parser.add_argument("--env",
+                         dest="env",
+                         help="The environment to update")
+
+    parser.add_argument("--configDir",
+                        dest="configDir",
+                        help="Path to a directory containing engines and session sub-directories")
+
+    parser.add_argument("--empty",
+                        action='store_true',
+                        help="Just upload empty session/engine configs")
+    
+    args = parser.parse_args()
+     
+sys.exit(main(args))
