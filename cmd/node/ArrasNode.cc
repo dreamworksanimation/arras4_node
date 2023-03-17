@@ -814,7 +814,7 @@ void ArrasNode::checkIpcSocket()
     if (boost::filesystem::exists(fsSatus)) {
         if (boost::filesystem::is_other(fsSatus)) {
             boost::filesystem::perms fsPerms = fsSatus.permissions();
-            if (static_cast<int>(fsPerms) & IPC_PERMS != IPC_PERMS) {
+            if ((static_cast<int>(fsPerms) & IPC_PERMS) != IPC_PERMS) {
                 std::stringstream msg;
                 msg << "IPC Socket file " << mComputationDefaults.ipcName << " exists, but permissions are"
                     << std::oct << fsPerms << " : required permissions are " << std::oct << IPC_PERMS;
