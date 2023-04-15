@@ -232,7 +232,7 @@ void Computation::getPerformanceStats(api::ObjectRef obj)
 {
     std::lock_guard<std::mutex> lock(mStatsMutex);
   
-    obj["memoryUsageBytesMax"] = mMemoryUsageBytesMax;
+    obj["memoryUsageBytesMax"] = (Json::UInt64)mMemoryUsageBytesMax;
     obj["memoryUsageBytesCurrent"] = (Json::UInt64)mLastHeartbeat->mMemoryUsageBytesCurrent;
 
     obj["cpuUsage5Secs"] = mLastHeartbeat->mCpuUsage5SecsCurrent;
