@@ -21,7 +21,7 @@ SessionNodeMap::SessionNodeMap(api::ObjectConstRef aRoutingData)
         info.port = static_cast<unsigned short>((*nodeIt)["tcp"].asInt());
    
 
-        api::UUID nodeId(nodeIt.memberName());// memberName() is DEPRECATED in later jsoncpp versions
+        api::UUID nodeId(nodeIt.name());
         info.nodeId = nodeId;
         mMap[nodeId] = info;
 
@@ -45,7 +45,7 @@ SessionNodeMap::update(api::ObjectConstRef aRoutingData)
     api::ObjectConstRef nodes = aRoutingData["nodes"];
     for (api::ObjectConstIterator nodeIt = nodes.begin();
          nodeIt != nodes.end(); ++nodeIt) {
-        api::UUID nodeId(nodeIt.memberName());// memberName() is DEPRECATED in later jsoncpp versions
+        api::UUID nodeId(nodeIt.name());
         if (mMap.count(nodeId) == 0) {
             NodeInfo info;
             info.hostname = (*nodeIt)["host"].asString();

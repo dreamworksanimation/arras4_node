@@ -687,7 +687,7 @@ ArrasNode::updateTags(api::ObjectConstRef tags)
         api::Object current = mNodeInfo["tags"];
         for (api::ObjectConstIterator it = tags.begin();
              it != tags.end(); ++it) {
-            current[it.memberName()] = *it;
+            current[it.name()] = *it;
         }
         std::string msg;
         if (!validateTags(current, msg)) 
@@ -741,7 +741,7 @@ ArrasNode::updateTagsProc(api::Object tags)
     api::Object current = mNodeInfo["tags"];
     for (api::ObjectIterator it = tags.begin();
          it != tags.end(); ++it) {
-        current[it.memberName()] = *it;
+        current[it.name()] = *it;
     }
 
     std::string msg;
