@@ -11,7 +11,7 @@ def version():
     """
     Increment the build in the version.
     """
-    _version = '4.7.0'
+    _version = '4.7.1'
     from rezbuild import earlybind
     return earlybind.version(this, _version)
 
@@ -31,7 +31,10 @@ else:
     build_system_pbr = 'cmake_modules'
 
 variants = [
-    ['refplat-vfx2021.0']
+    ['os-CentOS-7', 'refplat-vfx2021.0'],
+    ['os-CentOS-7', 'refplat-vfx2022.0'],
+    ['os-rocky-9', 'refplat-vfx2021.0'],
+    ['os-rocky-9', 'refplat-vfx2022.0'],
 ]
 
 sconsTargets = {}
@@ -44,7 +47,7 @@ requires = [
 
 private_build_requires = [
     build_system_pbr,
-    'gcc'
+    'gcc-9.3.x'
 ]
 
 def commands():
