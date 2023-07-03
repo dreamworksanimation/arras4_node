@@ -80,7 +80,7 @@ SessionConfig::SessionConfig(api::ObjectConstRef desc,
     for (api::ObjectConstIterator cIt = comps.begin();
          cIt != comps.end(); ++cIt) {
 
-        std::string compName = cIt.memberName();
+        std::string compName = cIt.name();
         api::ObjectConstRef info = *cIt;
 
         if (!info.isObject() || 
