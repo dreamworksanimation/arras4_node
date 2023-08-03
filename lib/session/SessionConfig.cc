@@ -3,6 +3,10 @@
 
 #include "SessionConfig.h"
 
+#if defined(JSONCPP_VERSION_MAJOR)
+#define memberName name
+#endif
+
 namespace arras4 {
     namespace node {
  

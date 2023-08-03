@@ -32,6 +32,10 @@
 #include <net/if.h>
 #include <malloc.h>
 
+#if defined(JSONCPP_VERSION_MAJOR)
+#define memberName name
+#endif
+
 namespace {
 
     // NodeInfo client protocol bit flags
@@ -685,7 +689,7 @@ ArrasNode::updateTags(api::ObjectConstRef tags)
 
         // verify tags        
         api::Object current = mNodeInfo["tags"];
-        for (api::ObjectIterator it = tags.begin();
+        for (api::ObjectConstIterator it = tags.begin();
              it != tags.end(); ++it) {
             current[it.memberName()] = *it;
         }
@@ -716,7 +720,7 @@ ArrasNode::deleteTags(api::ObjectConstRef tags)
 
         // verify tags
         api::Object current = mNodeInfo["tags"];
-        for (api::ObjectIterator it = tags.begin();
+        for (api::ObjectConstIterator it = tags.begin();
              it != tags.end(); ++it) {
             if ((*it).isString() && current.isMember((*it).asString())) {
                 current.removeMember((*it).asString());

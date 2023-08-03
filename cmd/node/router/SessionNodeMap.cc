@@ -6,6 +6,11 @@
 #include <exceptions/KeyError.h>
 #include <arras4_log/Logger.h>
 #include <arras4_log/LogEventStream.h>
+
+#if defined(JSONCPP_VERSION_MAJOR)
+#define memberName name
+#endif
+
 namespace arras4 {
 namespace node {
 
