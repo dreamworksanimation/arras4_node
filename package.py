@@ -52,6 +52,7 @@ private_build_requires = [
 
 def commands():
     prependenv('PATH', '{root}/bin:{root}/sbin')
+    prependenv('LD_LIBRARY_PATH', '{root}/lib')
 
 
 uuid = '2798ce16-36b2-46a7-80ac-7d90994706d'
