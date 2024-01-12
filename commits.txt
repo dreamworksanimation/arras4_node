@@ -1,4 +1,4 @@
-# Copyright 2023 DreamWorks Animation LLC and Intel Corporation
+# Copyright 2023-2024 DreamWorks Animation LLC and Intel Corporation
 # SPDX-License-Identifier: Apache-2.0
 
 based on arras_components/develop-4 commit d8b4973611156ef6ccd553dcbf4ad31e6cb76d56
