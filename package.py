@@ -47,7 +47,7 @@ requires = [
 ]
 
 private_build_requires = [
-    'cmake_modules-1.0',
+    'cmake_modules',
     'gcc-9.3.x|11.x'
 ]
 
