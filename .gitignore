@@ -51,3 +51,6 @@ boot
 *.pyc
 
 /Debug/
+
+# gha created files
+.ci_githooks
